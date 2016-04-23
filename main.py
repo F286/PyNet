@@ -30,18 +30,24 @@ imgData = [(.2, 1.0, 1.0)
            for y in range(shape)]
 
 imgNp = np.array(imgData)
-fig, axes = plt.subplots(1, 2, figsize=(12, 6),
+fig, axes = plt.subplots(shape, shape, figsize=(12, 6),
                          subplot_kw={'xticks': [], 'yticks': []})
 
 fig.subplots_adjust(hspace=0.3, wspace=0.05)
 
-index = 0;
-for axis, layer in zip(axes.flat, [layer1, layer2]):
-    index += 1
-    v = []
-    for row in layer:
-        v.append([n.value for n in row])
-    axis.imshow(np.array(v), interpolation='nearest')
-    axis.set_title(index)
+for x, y in np.ndenumerate(layer1):
+    w = layer1[x][y].weights
+    axes.flat[x * shape + y].imshow(w, interpolation='nearest')
+
+
+
+# index = 0;
+# for axis, layer in zip(axes.flat, [layer1]):#, layer2]):
+#     index += 1
+#     v = []
+#     for row in layer:
+#         v.append([n.value for n in row])
+#     axis.imshow(np.array(v), interpolation='nearest')
+#     axis.set_title(index)
 
 plt.show()
