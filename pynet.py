@@ -2,8 +2,8 @@ import numpy as np
 
 val1 = np.pad(np.random.randn(2, 2), 1, 'constant')
 val2 = np.pad(np.random.randn(2, 2), 1, 'constant')
-weight2 = np.random.randn(5, 5, 3, 3)
-d_weight2 = np.zeros(shape=(5, 5, 3, 3))
+weight2 = np.random.randn(val2.shape[0], val2.shape[1], 3, 3)
+d_weight2 = np.zeros(shape=(val2.shape[0], val2.shape[1], 3, 3))
 
 # print val1
 # print weight2[0, 0]
