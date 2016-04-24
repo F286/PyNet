@@ -1,30 +1,97 @@
 import numpy as np
+import matplotlib.pyplot as plt
+# import glumpy
 
-val1 = np.pad(np.random.randn(2, 2), 1, 'constant')
-val2 = np.pad(np.random.randn(2, 2), 1, 'constant')
+np.random.seed(0)
+
+val1 = np.random.randn(32, 32)
+val2 = np.random.randn(32, 32)
 weight2 = np.random.randn(val2.shape[0], val2.shape[1], 3, 3)
-d_weight2 = np.zeros(shape=(val2.shape[0], val2.shape[1], 3, 3))
 
-# print val1
-# print weight2[0, 0]
-# print(val1)
-# print(val2)
+val3 = np.random.randn(32, 32)
+mean3 = 0.0
+std3 = 0.0
 
+val4 = np.random.randn(32, 32)
+softmaxDivide4 = 0.0
+
+# layer 2 convolution
+val1Pad = np.pad(val1, 1, 'constant')
 for p, v in np.ndenumerate(val2[1:-1, 1:-1]):
-    # print p[0] + 1, p[1] + 1
-    val2[p[0] + 1, p[1] + 1] = np.sum(val1[ p[0]:p[0]+3, p[1]:p[1]+3 ] * weight2[p])
-    # val2[np.add(p, 1)] = 2
+    val2[p[0] + 1, p[1] + 1] = np.sum(val1Pad[ p[0]:p[0]+3, p[1]:p[1]+3 ] * weight2[p])
 
-# val2[1, 1] = 2
+# layer 3 normalize
+mean3 = np.average(val2)
+std3 = np.sqrt(np.sum((val2 - mean3) ** 2))
 
-print(val1)
+val3 = (val2 - mean3) / std3
+
+# layer 4 softmax
+softmaxDivide4 = np.sum(np.exp(val3))
+val4 = np.exp(val3) / softmaxDivide4
+
+
+# layer 4 gradient
+gradVal4 = np.ones(val4.shape)
+
+# print gradVal4
+# print np.exp(val4) / softmaxDivide4
+
+gradVal4 *= np.exp(val4) / softmaxDivide4
+
+# layer 3 gradient
+gradVal3 = gradVal4 / std3
+
+
+# window = glumpy.Window(512, 512)
+# im = glumpy.Image(z.astype(np.float32), cmap=glumpy.colormap.Grey)
+
+# @window.event
+# def on_draw():
+#     im.blit(0, 0, window.width, window.height)
+# window.mainloop()
+
+def colorize(val):
+    ret = np.zeros((val.shape[0], val.shape[1], 3))
+    for x in range(ret.shape[0]):
+        for y in range(ret.shape[1]):
+            v = val[x, y]
+            ret[x, y] = (max(v, 0), 0, max(-v, 0))
+    return ret
+
+# display = np.zeros((val2.shape[0], val2.shape[1], 3))
+# for x in range(display.shape[0]):
+#     for y in range(display.shape[1]):
+#         display[x, y] = colorize(val2[x, y])
+
 print(val2)
 
-# for p, v in np.ndenumerate(val1):
-#     min = np.fmax(0, np.add(p, -1))
-#     max = np.add(p, 2)
-#     valPrev = val1[min[0]:max[0], min[1]:max[1]]
-#     val2 = np.sum(np.multiply(weight2[p], valPrev))
+display = colorize(val2)
+
+# colorizeV = np.vectorize(colorize)
 #
+# print colorizeV(val2)
+# # print [colorize(y) for y in val2]
 #
-# print(weight2)
+# display = colorizeV(val2) #np.vectorize(weight2.reshape(-1, 3, 3))
+# for i, d in np.ndenumerate(display):
+#     display[i] = (1, 1, 0)
+
+# print(display)
+
+# Plot the grid
+fig, ax = plt.subplots(1, 2)
+ax[0].imshow(colorize(val2), interpolation='none')
+# ax[1].imshow(colorize(val3), interpolation='none')
+plt.gray()
+plt.show()
+
+# print gradVal3
+
+# print val2
+# print val3
+# print val4
+# print np.sum(val4)
+# print(gradVal4)
+
+# print gradVal4
