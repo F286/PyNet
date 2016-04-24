@@ -38,6 +38,11 @@ gradVal4 *= np.exp(val4) / softmaxDivide4
 gradVal3 = gradVal4 / std3
 
 # layer 2 gradient
+
+# val1Pad = np.pad(val1, 1, 'constant')
+# for p, v in np.ndenumerate(val2[1:-1, 1:-1]):
+#     val2[p[0] + 1, p[1] + 1] = np.sum(val1Pad[ p[0]:p[0]+3, p[1]:p[1]+3 ] * weight2[p])
+
 # gradWeight2 = gradVal3
 gradWeight2 = np.random.rand(32, 32) / 3
 # gradWeight2 = np.zeros(gradVal3.shape)
