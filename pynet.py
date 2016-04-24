@@ -53,10 +53,20 @@ gradVal3 = gradVal4 / std3
 
 def colorize(val):
     ret = np.zeros((val.shape[0], val.shape[1], 3))
-    for x in range(ret.shape[0]):
-        for y in range(ret.shape[1]):
+    for x in range(val.shape[0]):
+        for y in range(val.shape[1]):
             v = val[x, y]
             ret[x, y] = (max(v, 0), 0, max(-v, 0))
+    return ret
+
+def colorizeWeight(val):
+    ret = np.zeros((val.shape[0] * 4, val.shape[1] * 4, 3))
+    for x in range(val.shape[0]):
+        for y in range(val.shape[1]):
+            for subx in range(3):
+                for suby in range(3):
+                    v = val[x, y, subx, suby]
+                    ret[x * 4 + subx, y * 4 + suby] = (max(v, 0), 0, max(-v, 0))
     return ret
 
 # display = np.zeros((val2.shape[0], val2.shape[1], 3))
@@ -82,7 +92,7 @@ display = colorize(val2)
 # Plot the grid
 fig, ax = plt.subplots(1, 2)
 ax[0].imshow(colorize(val2), interpolation='none')
-# ax[1].imshow(colorize(val3), interpolation='none')
+ax[1].imshow(colorizeWeight(weight2), interpolation='none')
 plt.gray()
 plt.show()
 

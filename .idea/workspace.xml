@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0ef3b6d7-e8e8-4e11-978b-4e9a8aadd837" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pynet.py" afterPath="$PROJECT_DIR$/pynet.py" />
     </list>
     <ignored path="PyNet.iws" />
@@ -18,7 +17,7 @@
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/PyNet$main.coverage" NAME="main Coverage Results" MODIFIED="1461417053499" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/PyNet$pynet.coverage" NAME="pynet Coverage Results" MODIFIED="1461503438467" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PyNet$pynet.coverage" NAME="pynet Coverage Results" MODIFIED="1461503905916" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -32,11 +31,12 @@
       <file leaf-file-name="pynet.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pynet.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="880">
-              <caret line="78" column="0" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
+            <state relative-caret-position="416">
+              <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <marker date="1461503438000" expanded="true" signature="1864:2020" placeholder="..." />
+                <marker date="1461503905000" expanded="true" signature="1489:1709" placeholder="..." />
+                <marker date="1461503905000" expanded="true" signature="2236:2399" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -513,11 +513,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pynet.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="880">
-          <caret line="78" column="0" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
+        <state relative-caret-position="416">
+          <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <marker date="1461503438000" expanded="true" signature="1864:2020" placeholder="..." />
+            <marker date="1461503905000" expanded="true" signature="1489:1709" placeholder="..." />
+            <marker date="1461503905000" expanded="true" signature="2236:2399" placeholder="..." />
           </folding>
         </state>
       </provider>
