@@ -15,6 +15,10 @@ class ConvLayer:
         self.gradient = np.random.randn(self.width * self.height * self.kernel ** 2)
         self.weight = np.random.randn(self.width * self.height * self.kernel ** 2)
 
+    def clear(self):
+        for i in range(len(self.gradient)):
+            self.gradient[i] = 0
+
     # writes values to self, from prev
     def forward(self, prev):
         l = self
@@ -40,7 +44,8 @@ class ConvLayer:
 
                 if 0 < iPrev < len(prev.value):
                     # l.value[x + y * l.width] += l.weight[i] * prev.value[iPrev]
-                    l.weight[i] += l.value[x + y * l.width]
+                    l.gradient[i] += l.value[x + y * l.width]
+                    l.gradient[i] = -1
 
 
 np.random.seed(0)
@@ -50,8 +55,21 @@ layer.append(ConvLayer())
 layer.append(ConvLayer())
 layer.append(ConvLayer())
 
+for i in layer:
+    i.clear()
+
+last = layer[len(layer) - 1]
+for i in range(len(last.gradient)):
+    last.gradient[i] = 1
+
 for i in range(len(layer) - 1):
     layer[i + 1].forward(layer[i])
+
+for i in range(len(layer) - 1):
+    layer[i + 1].backward(layer[i])
+
+
+
 # [layer[i + 1].forward(layer[i]) for i in layer[1:]]
 # for i, l in enumerate(layer, start=1):
 #     layer[i].forward(layer[i-1])
@@ -126,10 +144,19 @@ def displayWeights(l):
         root = (x + y * l.width) * l.kernel ** 2
         for _x, _y in [(_x, _y) for _y in range(l.kernel) for _x in range(l.kernel)]:
             i = root + _x + _y * l.kernel
-            c = (max(l.weight[i], 0), max(l.gradient[i], 0), max(-l.weight[i], 0))
+            c = (max(l.weight[i], 0), 0, max(-l.weight[i], 0))
             r[x * l.kernel + _x, y * l.kernel + _y] = c
     return r
 
+def displayGradients(l):
+    r = np.zeros((l.width * l.kernel, l.height * l.kernel, 3))
+    for x, y in [(x, y) for y in range(l.height) for x in range(l.width)]:
+        root = (x + y * l.width) * l.kernel ** 2
+        for _x, _y in [(_x, _y) for _y in range(l.kernel) for _x in range(l.kernel)]:
+            i = root + _x + _y * l.kernel
+            c = (max(-l.gradient[i], 0), max(l.gradient[i], 0), 0)
+            r[x * l.kernel + _x, y * l.kernel + _y] = c
+    return r
 
 # def colorize(val):
 #     ret = np.zeros((val.shape[0], val.shape[1], 3))
@@ -151,10 +178,11 @@ def displayWeights(l):
 #     return ret
 
 # Plot the grid
-fig, ax = plt.subplots(2, len(layer))
+fig, ax = plt.subplots(3, len(layer))
 for i, lay in enumerate(layer):
     ax[0, i].imshow(displayValues(lay), interpolation='none')
     ax[1, i].imshow(displayWeights(lay), interpolation='none')
+    ax[2, i].imshow(displayGradients(lay), interpolation='none')
 # ax[0].imshow(colorize(val2), interpolation='none')
 # ax[1].imshow(colorizeWeight(weight2, gradWeight2), interpolation='none')
 plt.gray()
