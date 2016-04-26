@@ -12,7 +12,7 @@ class ConvLayer:
 
     def __init__(self):
         self.value = np.random.randn(self.width * self.height)
-        self.gradient = np.random.randn(self.width * self.height)
+        self.gradient = np.random.randn(self.width * self.height * self.kernel ** 2)
         self.weight = np.random.randn(self.width * self.height * self.kernel ** 2)
 
     # writes values to self, from prev
@@ -30,7 +30,17 @@ class ConvLayer:
 
     # writes to the derivatives of prev, from self
     def backward(self, prev):
-        pass
+        l = self
+        for x, y in [(x,y) for y in range(l.height) for x in range(l.width)]:
+            l.value[x + y * l.width] = 0
+            root = (x + y * l.width) * l.kernel ** 2
+            for _x, _y in [(_x, _y) for _y in range(l.kernel) for _x in range(l.kernel)]:
+                i = root + _x + _y * l.kernel
+                iPrev = (x + _x - (l.kernel-1)/2) + (y + _y - (l.kernel-1)/2) * l.width
+
+                if 0 < iPrev < len(prev.value):
+                    # l.value[x + y * l.width] += l.weight[i] * prev.value[iPrev]
+                    l.weight[i] += l.value[x + y * l.width]
 
 
 np.random.seed(0)
@@ -106,7 +116,7 @@ def displayValues(l):
     for x, y in [(x, y) for y in range(l.height) for x in range(l.width)]:
         # root = (x + y * l.width) * l.kernel ** 2
         i = x + y# + _x + _y * l.kernel
-        c = (max(l.value[i], 0), max(l.gradient[i], 0), max(-l.value[i], 0))
+        c = (max(l.value[i], 0), 0, max(-l.value[i], 0))
         r[x, y] = c
     return r
 
@@ -116,7 +126,7 @@ def displayWeights(l):
         root = (x + y * l.width) * l.kernel ** 2
         for _x, _y in [(_x, _y) for _y in range(l.kernel) for _x in range(l.kernel)]:
             i = root + _x + _y * l.kernel
-            c = (max(l.weight[i], 0), 0, max(-l.weight[i], 0))
+            c = (max(l.weight[i], 0), max(l.gradient[i], 0), max(-l.weight[i], 0))
             r[x * l.kernel + _x, y * l.kernel + _y] = c
     return r
 
