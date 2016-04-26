@@ -40,11 +40,14 @@ layer.append(ConvLayer())
 layer.append(ConvLayer())
 layer.append(ConvLayer())
 
+for i in range(len(layer) - 1):
+    layer[i + 1].forward(layer[i])
+# [layer[i + 1].forward(layer[i]) for i in layer[1:]]
 # for i, l in enumerate(layer, start=1):
 #     layer[i].forward(layer[i-1])
 
-layer[1].forward(layer[0])
-layer[2].forward(layer[1])
+# layer[1].forward(layer[0])
+# layer[2].forward(layer[1])
 
 # val1 = np.random.randn(32, 32)
 # val2 = np.random.randn(32, 32)
