@@ -1,9 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import math as math
 
 class ConvLayer:
-    width = 2
-    height = 2
+    width = 8
+    height = 8
     value = [0.0]
     gradient = [0.0]
     weight = [0.0]
@@ -15,37 +16,53 @@ class ConvLayer:
         self.gradient = np.random.randn(self.width * self.height * self.kernel ** 2)
         self.weight = np.random.randn(self.width * self.height * self.kernel ** 2)
 
+        l = self
+        for x, y in [(x, y) for y in range(l.height) for x in range(l.width)]:
+            l.value[x + y * l.width] = 2 - math.sqrt((x - 4) ** 2 + (y - 4) ** 2) ;
+
     def clear(self):
         for i in range(len(self.gradient)):
             self.gradient[i] = 0
 
     # writes values to self, from prev
-    def forward(self, prev):
+    def forward(self, input):
         l = self
         for x, y in [(x,y) for y in range(l.height) for x in range(l.width)]:
             l.value[x + y * l.width] = 0
-            root = (x + y * l.width) * l.kernel ** 2
+            neuronOffset = (x + y * l.width) * l.kernel ** 2
             for _x, _y in [(_x, _y) for _y in range(l.kernel) for _x in range(l.kernel)]:
-                i = root + _x + _y * l.kernel
-                iPrev = (x + _x - (l.kernel-1)/2) + (y + _y - (l.kernel-1)/2) * l.width
+                neuronValue = x + y * l.width
+                neuronSub = neuronOffset + _x + _y * l.kernel
+                inputValue = (x + _x - (l.kernel-1)/2) + (y + _y - (l.kernel-1)/2) * l.width
 
-                if 0 < iPrev < len(prev.value):
-                    l.value[x + y * l.width] += l.weight[i] * prev.value[iPrev]
+                if 0 < inputValue < len(input.value):
+                    l.value[neuronValue] += l.weight[neuronSub] * input.value[inputValue]
 
     # writes to the derivatives of prev, from self
-    def backward(self, prev):
+    def backward(self, input):
         l = self
-        for x, y in [(x,y) for y in range(l.height) for x in range(l.width)]:
-            l.value[x + y * l.width] = 0
-            root = (x + y * l.width) * l.kernel ** 2
+        for x, y in [(x, y) for y in range(input.height) for x in range(input.width)]:
+            neuronOffset = (x + y * l.width) * l.kernel ** 2
             for _x, _y in [(_x, _y) for _y in range(l.kernel) for _x in range(l.kernel)]:
-                i = root + _x + _y * l.kernel
-                iPrev = (x + _x - (l.kernel-1)/2) + (y + _y - (l.kernel-1)/2) * l.width
+                neuronValue = x + y * l.width
+                neuronSub = neuronOffset + _x + _y * l.kernel
+                inputValue = (x + _x - (l.kernel-1)/2) + (y + _y - (l.kernel-1)/2) * l.width
 
-                if 0 < iPrev < len(prev.value):
-                    # l.value[x + y * l.width] += l.weight[i] * prev.value[iPrev]
-                    l.gradient[i] += l.value[x + y * l.width]
-                    l.gradient[i] = -1
+                if 0 < inputValue < len(input.value):
+                    input.gradient[neuronSub] += input.value[inputValue] * l.weight[neuronSub]
+
+        # l = self
+        # for x, y in [(x,y) for y in range(l.height) for x in range(l.width)]:
+        #     l.value[x + y * l.width] = 0
+        #     root = (x + y * l.width) * l.kernel ** 2
+        #     for _x, _y in [(_x, _y) for _y in range(l.kernel) for _x in range(l.kernel)]:
+        #         i = root + _x + _y * l.kernel
+        #         iPrev = (x + _x - (l.kernel-1)/2) + (y + _y - (l.kernel-1)/2) * l.width
+        #
+        #         if 0 < iPrev < len(prev.value):
+        #             # l.value[x + y * l.width] += l.weight[i] * prev.value[iPrev]
+        #             prev.gradient[i] += l.value[x + y * l.width]
+        #             prev.gradient[i] = -1
 
 
 np.random.seed(0)
@@ -55,12 +72,17 @@ layer.append(ConvLayer())
 layer.append(ConvLayer())
 layer.append(ConvLayer())
 
+# layer[0].weight =
+
 for i in layer:
     i.clear()
 
 last = layer[len(layer) - 1]
 for i in range(len(last.gradient)):
-    last.gradient[i] = 1
+    if i % (last.height * 9) >30:
+        last.gradient[i] = 1
+    else:
+        last.gradient[i] = 0
 
 for i in range(len(layer) - 1):
     layer[i + 1].forward(layer[i])
@@ -176,6 +198,8 @@ def displayGradients(l):
 #                     g = grad[x, y]
 #                     ret[x * 4 + subx, y * 4 + suby] = (max(v, 0), abs(g), max(-v, 0))
 #     return ret
+
+# print layer[2].weight
 
 # Plot the grid
 fig, ax = plt.subplots(3, len(layer))
